@@ -1,4 +1,5 @@
 ﻿using Crawler.Models;
+using Crawler.Utils;
 using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace Crawler
         /// </summary>
         public static void Run()
         {
-            HtmlNode rootnode = GetHtmlRoot(WebDomain + "list.html");
+            HtmlNode rootnode = HtmlNoder.GetHtmlRoot(WebDomain + "list.html");
             string cateHtmlPath = "//table[@class='catetable']/tr";//"//span[@class='num']/font[last()]";
             HtmlNodeCollection cateHtml = rootnode.SelectNodes(cateHtmlPath);    //所有找到的节点都是一个集合
             if (cateHtml != null)
@@ -40,12 +41,12 @@ namespace Crawler
                         category.Childs.Add(child);
                         //取列表页
                         System.Threading.Thread.Sleep(2000);
-                        rootnode = GetHtmlRoot(child.Url);//考虑分页
+                        rootnode = HtmlNoder.GetHtmlRoot(child.Url);//考虑分页
                         var articleNodes = rootnode.SelectNodes("//div[@class='doc-list']/ul/li");
                         foreach (var articleNode in articleNodes)
                         {
                             var aNode =articleNode.SelectSingleNode("div[@class='doc-list-title']/h3/a");
-                            Console.WriteLine($" >{aNode.InnerText.Replace(" ","").Replace("\r","")}");
+                            Console.WriteLine($" >>>{aNode.InnerText.Replace(" ","").Replace("\r","")}");
                         }
                     }
                     categories.Add(category);
@@ -58,41 +59,12 @@ namespace Crawler
             }
         }
 
-
-        public static Category GetCategory(HtmlNode aNode)
+        public static Category GetCategory(HtmlNode htmlNode)
         {
-            return new Category()
-            {
-                Name = aNode.InnerText.Replace("\r","").Replace("\n", "").Replace(" ",""),
-                Url = WebDomain + aNode.GetAttributeValue("href", "")
-            };
+            var tag = HtmlTag.GetAnchor(htmlNode);
+            return new Category { Name = tag.Text,Url =WebDomain+ tag.Href};
         }
-
-
-        public static HtmlNode GetHtmlRoot(string url)
-        {
-            try
-            {
-                HtmlWeb web = new HtmlWeb();
-                HtmlDocument doc = web.Load(url);
-                if (doc.DocumentNode != null)
-                {
-                    return doc.DocumentNode;
-                }
-                System.Threading.Thread.Sleep(1000);
-                WebRequest rGet = WebRequest.Create(url);
-                WebResponse rSet = rGet.GetResponse();
-                Stream s = rSet.GetResponseStream();
-                StreamReader reader = new StreamReader(s, Encoding.UTF8);
-                doc = new HtmlDocument();
-                doc.LoadHtml(reader.ReadToEnd());
-                return doc.DocumentNode;
-            }
-            catch (WebException)
-            {
-                //连接失败
-                return null;
-            }
-        }
+        
+        
     }
 }
