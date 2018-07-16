@@ -1,7 +1,9 @@
-﻿using HtmlAgilityPack;
+﻿using Crawler.Models;
+using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -12,41 +14,79 @@ namespace Crawler
     /// </summary>
     class CrawlHelper
     {
+        public static string WebDomain = "http://www.oilwenku.com/";
 
-        public static void Run(string url)
-        {
-            HtmlWeb web = new HtmlWeb();
-            HtmlAgilityPack.HtmlDocument doc = web.Load(url);
-            HtmlNode rootnode = doc.DocumentNode;
-        }
-
+        /// <summary>
+        /// 思路：获取分类、循环、数据列表并翻页（逐个进入详细页）
+        /// </summary>
         public static void Run()
         {
-            string htmlstr = GetHtmlStr("http://www.hao123.com");
-            HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
-            doc.LoadHtml(htmlstr);
-            HtmlNode rootnode = doc.DocumentNode;    //XPath路径表达式，这里表示选取所有span节点中的font最后一个子节点，其中span节点的class属性值为num
-                                                     //根据网页的内容设置XPath路径表达式
-            string xpathstring = "//span[@class='num']/font[last()]";
-            HtmlNodeCollection aa = rootnode.SelectNodes(xpathstring);    //所有找到的节点都是一个集合
-
-            if (aa != null)
+            HtmlNode rootnode = GetHtmlRoot(WebDomain + "list.html");
+            string cateHtmlPath = "//table[@class='catetable']/tr";//"//span[@class='num']/font[last()]";
+            HtmlNodeCollection cateHtml = rootnode.SelectNodes(cateHtmlPath);    //所有找到的节点都是一个集合
+            if (cateHtml != null)
             {
-                string innertext = aa[0].InnerText;
-                string color = aa[0].GetAttributeValue("color", "");    //获取color属性，第二个参数为默认值
-                                                                        //其他属性大家自己尝试
+                List<Category> categories = new List<Category>();
+                foreach (var p1 in cateHtml)
+                {
+                    var catePNode = p1.SelectSingleNode("td/div/a[@class='f1']");
+                    var category = GetCategory(catePNode);
+                    
+                    var cate2Nodes = p1.SelectNodes("td/div/a[@class='f2']");
+                    category.Childs = new List<Category>();
+                    foreach (var p2Node in cate2Nodes)
+                    {
+                        var child = GetCategory(p2Node);
+                        category.Childs.Add(child);
+                        //取列表页
+                        System.Threading.Thread.Sleep(2000);
+                        rootnode = GetHtmlRoot(child.Url);//考虑分页
+                        var articleNodes = rootnode.SelectNodes("//div[@class='doc-list']/ul/li");
+                        foreach (var articleNode in articleNodes)
+                        {
+                            var aNode =articleNode.SelectSingleNode("div[@class='doc-list-title']/h3/a");
+                            Console.WriteLine($" >{aNode.InnerText.Replace(" ","").Replace("\r","")}");
+                        }
+                    }
+                    categories.Add(category);
+                    Console.WriteLine(category.Name + "："+category.Url);
+                    Console.WriteLine(string.Join(" ", category.Childs.Select(u => u.Name)));
+                    Console.WriteLine("--------------------------------------------");
+                }
+
+           
             }
         }
 
-        public static string GetHtmlStr(string url)
+
+        public static Category GetCategory(HtmlNode aNode)
+        {
+            return new Category()
+            {
+                Name = aNode.InnerText.Replace("\r","").Replace("\n", "").Replace(" ",""),
+                Url = WebDomain + aNode.GetAttributeValue("href", "")
+            };
+        }
+
+
+        public static HtmlNode GetHtmlRoot(string url)
         {
             try
             {
+                HtmlWeb web = new HtmlWeb();
+                HtmlDocument doc = web.Load(url);
+                if (doc.DocumentNode != null)
+                {
+                    return doc.DocumentNode;
+                }
+                System.Threading.Thread.Sleep(1000);
                 WebRequest rGet = WebRequest.Create(url);
                 WebResponse rSet = rGet.GetResponse();
                 Stream s = rSet.GetResponseStream();
                 StreamReader reader = new StreamReader(s, Encoding.UTF8);
-                return reader.ReadToEnd();
+                doc = new HtmlDocument();
+                doc.LoadHtml(reader.ReadToEnd());
+                return doc.DocumentNode;
             }
             catch (WebException)
             {
