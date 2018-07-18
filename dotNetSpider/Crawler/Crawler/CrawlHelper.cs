@@ -76,7 +76,8 @@ namespace Crawler
             var totalPage = spanPager.ToInt();
 
             Parallel.For(1, totalPage, (curr) => {
-                var lurl = listUrl.Replace(".html", $"-{curr}-5404-0-0-0-0-9-0-0.html"); //"c-0001500001-1-5404-0-0-0-0-9-0-0.html";
+                //"c-0001500001-1-5404-0-0-0-0-9-0-0.html";
+                var lurl = listUrl.Replace(".html", $"-{curr}-5404-0-0-0-0-9-0-0.html");
                 rootNode = HtmlNoder.GetHtmlRoot(lurl);//考虑分页
                 //列表页数据
                 var articleNodes = rootNode.SelectNodes("//div[@class='doc-list']/ul/li");
