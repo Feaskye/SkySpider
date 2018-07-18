@@ -15,6 +15,10 @@ namespace Crawler.Utils
         /// <returns></returns>
         public static Anchor GetAnchor(HtmlNode aNode)
         {
+            if (aNode == null)
+            {
+                return null;
+            }
             return new Anchor()
             {
                 Text = TextUtils.ReplaceChar(aNode.InnerText),

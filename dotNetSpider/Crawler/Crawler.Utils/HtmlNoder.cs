@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Crawler.Utils
 {
-    public class HtmlNoder
+    public static class HtmlNoder
     {
         public static HtmlNode GetHtmlRoot(string url)
         {
@@ -20,6 +20,32 @@ namespace Crawler.Utils
             doc.LoadHtml(HttpGet.GetHtml(url));
             return doc.DocumentNode;
         }
+
+
+        public static string InnerText(this HtmlNode htmlNode)
+        {
+            return htmlNode == null ? "" : htmlNode.InnerText;
+        }
+
+        public static string InnerHtml(this HtmlNode htmlNode)
+        {
+            return htmlNode == null ? "" : htmlNode.InnerHtml;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
 

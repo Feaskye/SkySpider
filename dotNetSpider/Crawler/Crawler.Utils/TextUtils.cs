@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Crawler.Utils
 {
-    public class TextUtils
+    public static class TextUtils
     {
         private static string[] chars = new string[] { "\r", "\n", "\r\n", " ", "  ", "\"","'" };
 
@@ -17,6 +17,18 @@ namespace Crawler.Utils
             }
             return s;
         }
+
+        public static int ToInt(this string s)
+        {
+            int p = 0;
+            int.TryParse(ReplaceChar(s),out p);
+            return p;
+        }
+
+
+
+
+
 
     }
 }
