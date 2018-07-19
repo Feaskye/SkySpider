@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Crawler.DbContext
 {
-    //public class CrawlDbContext: DbContext
+    //public class CrawlDbContext : DbContext
     //{
 
     //}
