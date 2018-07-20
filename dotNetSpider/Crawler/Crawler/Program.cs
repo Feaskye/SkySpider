@@ -11,7 +11,9 @@ namespace Crawler
           
             try
             {
-                CrawlHelper.Run();
+                new Startup().Start();
+
+                
 
                 //Console.WriteLine("Hello World!");
                 //var datas = typeof(CrawlHelper).GetProperties().Select(u => new { name = 1, value = 1 }).ToList();

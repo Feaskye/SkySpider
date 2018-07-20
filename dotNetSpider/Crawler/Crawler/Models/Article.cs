@@ -1,6 +1,6 @@
 ﻿namespace Crawler
 {
-    public class Article
+    public class Article1
     {
         public string Name { get; set; }
 

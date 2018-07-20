@@ -1,6 +1,8 @@
 ﻿using Crawler.Models;
+using Crawler.Respository;
 using Crawler.Utils;
 using HtmlAgilityPack;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -18,16 +20,19 @@ namespace Crawler
     class CrawlHelper
     {
         public static string WebDomain = "http://www.oilwenku.com/";
+        public static ICrawlDbResposity crawlDbResposity;
 
         /// <summary>
         /// 思路：获取分类、循环、数据列表并翻页（逐个进入详细页）
         /// </summary>
-        public static void Run()
+        public static void Run(ServiceProvider serviceProvider)
         {
+            crawlDbResposity = serviceProvider.GetService<ICrawlDbResposity>();
+
             var categories = CrawCategories("list.html");
             foreach (var cate in categories)
             {
-                var articles = CrawlArticles(cate.Url);
+                var articles = CrawlArticles(cate.Id,cate.ShortTitle);
             }
         }
 
@@ -35,9 +40,9 @@ namespace Crawler
 
 
 
-        public static List<Category> CrawCategories(string cateUrl)
+        public static List<ArticleCategory> CrawCategories(string cateUrl)
         {
-            List<Category> categories = new List<Category>();
+            List<ArticleCategory> categories = new List<ArticleCategory>();
             var rootnode = HtmlNoder.GetHtmlRoot(WebDomain + cateUrl);
             string cateHtmlPath = "//table[@class='catetable']/tr";//"//span[@class='num']/font[last()]";
             HtmlNodeCollection cateHtml = rootnode.SelectNodes(cateHtmlPath);    //所有找到的节点都是一个集合
@@ -49,15 +54,22 @@ namespace Crawler
                     var category = GetCategory(catePNode);
 
                     var cate2Nodes = p1.SelectNodes("td/div/a[@class='f2']");
-                    category.Childs = new List<Category>();
+                    //category.Childs = new List<ArticleCategory>();
+
+                    crawlDbResposity.AddCategory(category);
+                    Console.WriteLine(category.Title + "：" + category.ShortTitle);
+
+                    categories.Add(category);
                     foreach (var p2Node in cate2Nodes)
                     {
                         var child = GetCategory(p2Node);
-                        category.Childs.Add(child);
+                        child.ParentId = category.Id;
+                        crawlDbResposity.AddCategory(child);
+                        categories.Add(child);
+                        Console.WriteLine(">>>>>>" + child.Title + "：" + child.ShortTitle);
                     }
-                    categories.Add(category);
-                    Console.WriteLine(category.Name + "：" + category.Url);
-                    Console.WriteLine(string.Join(" ", category.Childs.Select(u => u.Name)));
+                    
+                    //Console.WriteLine(string.Join(" ", category.Childs.Select(u => u.Name)));
                     Console.WriteLine("--------------------------------------------");
                 }
             }
@@ -67,7 +79,7 @@ namespace Crawler
 
 
 
-        public static List<Article> CrawlArticles(string listUrl)
+        public static List<Article> CrawlArticles(string cateId,string listUrl)
         {
             var articleQueues = new ConcurrentQueue<Article>();
             var rootNode = HtmlNoder.GetHtmlRoot(listUrl);//考虑分页
@@ -86,15 +98,21 @@ namespace Crawler
                     var aNode = articleNode.SelectSingleNode("div[@class='doc-list-title']/h3/a");
                     var art = HtmlTag.GetAnchor(aNode);
 
-                    var article = new Article() { Name = art.Text,Url = art.Href};
-                    Console.WriteLine($" >>>{art.Text}  ：{art.Href}");
+                    var article = new Article() {Id=Guid.NewGuid().ToString(), Title = art.Text,ResourceUrl= art.Href};
 
                     var articleRootNode = HtmlNoder.GetHtmlRoot(WebDomain + art.Href);
                     article.Content = articleRootNode.SelectSingleNode("//dl/dd[@class='fLeft wordwrap']").InnerText();
-                    article.FileType =  FileType.doc;
-                    article.AttachFiles =new string[] { "www.baidu.com"} ;
+                    //article.FileType =  FileType.doc;
+                    //article.AttachFiles =new string[] { "www.baidu.com"} ;
 
                     articleQueues.Enqueue(article);
+                    
+
+                    Console.WriteLine($" >>>{art.Text}  ：{art.Href}");
+                    if (articleQueues.Count < 50000)
+                    {
+                        crawlDbResposity.AddArticle(article);
+                    }
                 }
             });
 
@@ -104,10 +122,10 @@ namespace Crawler
 
 
 
-        private static Category GetCategory(HtmlNode htmlNode)
+        private static ArticleCategory GetCategory(HtmlNode htmlNode)
         {
             var tag = HtmlTag.GetAnchor(htmlNode);
-            return new Category { Name = tag.Text,Url =WebDomain+ tag.Href};
+            return new ArticleCategory { Id = Guid.NewGuid().ToString(),Title = tag.Text,ShortTitle =WebDomain+ tag.Href};
         }
         
         
