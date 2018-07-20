@@ -87,7 +87,8 @@ namespace Crawler
             var spanPager = rootNode.SelectSingleNode("//td[@class='pageTotal']/span[2]").InnerText();
             var totalPage = spanPager.ToInt();
 
-            Parallel.For(1, totalPage, (curr) => {
+            for(var curr=1;curr<=totalPage;curr++)
+            { 
                 //"c-0001500001-1-5404-0-0-0-0-9-0-0.html";
                 var lurl = listUrl.Replace(".html", $"-{curr}-5404-0-0-0-0-9-0-0.html");
                 rootNode = HtmlNoder.GetHtmlRoot(lurl);//考虑分页
@@ -107,14 +108,13 @@ namespace Crawler
 
                     articleQueues.Enqueue(article);
                     
-
                     Console.WriteLine($" >>>{art.Text}  ：{art.Href}");
                     if (articleQueues.Count < 50000)
                     {
                         crawlDbResposity.AddArticle(article);
                     }
                 }
-            });
+            }
 
             return articleQueues.ToList();
 
