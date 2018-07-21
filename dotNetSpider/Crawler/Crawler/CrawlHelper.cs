@@ -99,7 +99,7 @@ namespace Crawler
                     var aNode = articleNode.SelectSingleNode("div[@class='doc-list-title']/h3/a");
                     var art = HtmlTag.GetAnchor(aNode);
 
-                    var article = new Article() {Id=Guid.NewGuid().ToString(), Title = art.Text,ResourceUrl= art.Href};
+                    var article = new Article() { Id = Guid.NewGuid().ToString(), Title = art.Text, ResourceUrl = WebDomain + art.Href, CategoryId = cateId };
 
                     var articleRootNode = HtmlNoder.GetHtmlRoot(WebDomain + art.Href);
                     article.Content = articleRootNode.SelectSingleNode("//dl/dd[@class='fLeft wordwrap']").InnerText();
@@ -107,11 +107,14 @@ namespace Crawler
                     //article.AttachFiles =new string[] { "www.baidu.com"} ;
 
                     articleQueues.Enqueue(article);
-                    
-                    Console.WriteLine($" >>>{art.Text}  ：{art.Href}");
-                    if (articleQueues.Count < 50000)
+
+                    crawlDbResposity.AddArticle(article);
+                    Console.WriteLine($" >>>{art.Text}  ：{WebDomain + art.Href}");
+
+
+                    if (articleQueues.Count > 10000)
                     {
-                        crawlDbResposity.AddArticle(article);
+                        throw new Exception("数据量已够用！！");
                     }
                 }
             }

@@ -34,8 +34,12 @@ namespace Crawler.Respository
             {
                 return;
             }
-            _CrawlDbContext.Entry(entity).State = EntityState.Added;
-            _CrawlDbContext.SaveChanges();
+            try
+            {
+                _CrawlDbContext.Entry(entity).State = EntityState.Added;
+                _CrawlDbContext.SaveChanges();
+            }
+            catch { }
         }
 
         public void AddArticle(Article entity)
@@ -44,8 +48,15 @@ namespace Crawler.Respository
             {
                 return;
             }
-            _CrawlDbContext.Entry(entity).State = EntityState.Added;
-            _CrawlDbContext.SaveChanges();
+            try
+            {
+                _CrawlDbContext.Entry(entity).State = EntityState.Added;
+                _CrawlDbContext.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 
