@@ -9,16 +9,23 @@ namespace Crawler.Utils
     {
         public static HtmlNode GetHtmlRoot(string url)
         {
-            HtmlWeb web = new HtmlWeb();
-            HtmlDocument doc = web.Load(url);
-            if (doc.DocumentNode != null)
+            try
             {
+                HtmlWeb web = new HtmlWeb();
+                HtmlDocument doc = web.Load(url);
+                if (doc.DocumentNode != null)
+                {
+                    return doc.DocumentNode;
+                }
+
+                doc = new HtmlDocument();
+                doc.LoadHtml(HttpGet.GetHtml(url));
                 return doc.DocumentNode;
             }
-
-            doc = new HtmlDocument();
-            doc.LoadHtml(HttpGet.GetHtml(url));
-            return doc.DocumentNode;
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
 
@@ -32,7 +39,10 @@ namespace Crawler.Utils
             return htmlNode == null ? "" : htmlNode.InnerHtml;
         }
 
-
+        public static string GetAttributeValue(this HtmlNode htmlNode,string attrName)
+        {
+            return htmlNode == null ? "" : htmlNode.GetAttributeValue(attrName,"");
+        }
 
 
 

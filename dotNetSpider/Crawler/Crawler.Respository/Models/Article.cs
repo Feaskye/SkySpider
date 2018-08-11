@@ -16,12 +16,16 @@ namespace Crawler.Respository
         /// </summary>
         public string ShortTitle { get; set; }
 
-        public string Content { get; set; }
-
         /// <summary>
         /// 阅读量
         /// </summary>
         public int ReadCount { get; set; }
+
+        public int PageCount { get; set; }
+
+        public int RequireAmount { get; set; }
+
+        public string ResourceType { get; set; }
 
         /// <summary>
         /// 附件
@@ -36,5 +40,9 @@ namespace Crawler.Respository
         /// 分类编号
         /// </summary>
         public string CategoryId { get; set; }
+
+
+        public int BookStatus { get; set; }
+        public string CoverUrl { get; set; }
     }
 }

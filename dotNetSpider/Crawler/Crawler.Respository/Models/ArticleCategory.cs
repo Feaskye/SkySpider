@@ -17,8 +17,6 @@ namespace Crawler.Respository
         /// </summary>
         public string ShortTitle { get; set; }
 
-        //public string Content { get; set; }
-
 
         public string ParentId { get; set; }
 

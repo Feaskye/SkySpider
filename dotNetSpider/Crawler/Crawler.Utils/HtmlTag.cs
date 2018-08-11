@@ -25,5 +25,28 @@ namespace Crawler.Utils
                 Href = aNode.GetAttributeValue("href", "")
             };
         }
+
+
+        ///// <summary>
+        ///// 返回a标签
+        ///// </summary>
+        ///// <param name="aNode"></param>
+        ///// <returns></returns>
+        //public static Anchor GetAnchor(HtmlNode aNode)
+        //{
+        //    if (aNode == null)
+        //    {
+        //        return null;
+        //    }
+        //    return new Anchor()
+        //    {
+        //        Text = TextUtils.ReplaceChar(aNode.InnerText),
+        //        Href = aNode.GetAttributeValue("href", "")
+        //    };
+        //}
+
+
+
+
     }
 }
