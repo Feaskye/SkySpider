@@ -9,23 +9,16 @@ namespace Crawler.Utils
     {
         public static HtmlNode GetHtmlRoot(string url)
         {
-            try
+            HtmlWeb web = new HtmlWeb();
+            HtmlDocument doc = web.Load(url);
+            if (doc.DocumentNode != null)
             {
-                HtmlWeb web = new HtmlWeb();
-                HtmlDocument doc = web.Load(url);
-                if (doc.DocumentNode != null)
-                {
-                    return doc.DocumentNode;
-                }
-
-                doc = new HtmlDocument();
-                doc.LoadHtml(HttpGet.GetHtml(url));
                 return doc.DocumentNode;
             }
-            catch (Exception ex)
-            {
-                return null;
-            }
+
+            doc = new HtmlDocument();
+            doc.LoadHtml(HttpGet.GetHtml(url));
+            return doc.DocumentNode;
         }
 
 
