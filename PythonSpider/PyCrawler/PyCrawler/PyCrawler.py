@@ -17,9 +17,11 @@ else:
     print("else")
 
 
-str="Hello Crawler"
-print(str);
-
+a = 0
+while(a <= 10):
+    a = a + 1
+    print ("The number is "+str(a))
+print ("while is end")
 
 
 

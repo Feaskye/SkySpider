@@ -181,7 +181,8 @@ namespace Crawler
                         ReadCount = Convert.ToInt32(readCount),
                         RequireAmount = Convert.ToInt32(amount),
                         ResourceType = type,
-                        CoverUrl = coverUrl
+                        CoverUrl = coverUrl,
+                        EnabledMark =true
                     };
 
                     var articleRootNode = HtmlNoder.GetHtmlRoot(WebDomain + art.Href);

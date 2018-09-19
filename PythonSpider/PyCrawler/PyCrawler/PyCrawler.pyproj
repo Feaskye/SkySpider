@@ -21,10 +21,39 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="config.py" />
+    <Compile Include="filter.py" />
     <Compile Include="PyCrawler.py" />
+    <Compile Include="tieba\commands\run.py" />
+    <Compile Include="tieba\commands\__init__.py" />
+    <Compile Include="tieba\items.py" />
+    <Compile Include="tieba\middlewares.py" />
+    <Compile Include="tieba\pipelines.py" />
+    <Compile Include="tieba\settings.py" />
+    <Compile Include="tieba\spiders\emotion.py" />
+    <Compile Include="tieba\spiders\helper.py" />
+    <Compile Include="tieba\spiders\tieba_spider.py" />
+    <Compile Include="tieba\spiders\__init__.py" />
+    <Compile Include="tieba\__init__.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="config.json" />
+    <Content Include="emotion.json" />
+    <Content Include="README.md" />
     <Content Include="Readme.txt" />
+    <Content Include="README_en.md" />
+    <Content Include="scrapy.cfg" />
+    <Content Include="tieba\.vs\slnx.sqlite" />
+    <Content Include="tieba\.vs\tieba\v15\.suo" />
+    <Content Include="tieba\.vs\VSWorkspaceState.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="tieba\" />
+    <Folder Include="tieba\.vs\" />
+    <Folder Include="tieba\.vs\tieba\" />
+    <Folder Include="tieba\.vs\tieba\v15\" />
+    <Folder Include="tieba\commands\" />
+    <Folder Include="tieba\spiders\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

@@ -28,7 +28,7 @@ namespace Crawler
             //});
 
             services.AddDbContext<CrawlDbContext>(options =>
-                                options.UseSqlServer("#")); //配置mariadb连接字符串}
+                                options.UseSqlServer("Password=#feaskye888#;Persist Security Info=True;User ID=sa;Initial Catalog=SkyOilBase;Data Source=47.96.127.57,1433")); //配置mariadb连接字符串}
 
             services.AddScoped<ICrawlDbContext, CrawlDbContext>();
             services.AddScoped<ICrawlDbResposity<ArticleCategory>, CrawlDbResposity<ArticleCategory>>();
