@@ -21,8 +21,6 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="config.py" />
-    <Compile Include="filter.py" />
     <Compile Include="PyCrawler.py" />
     <Compile Include="tieba\commands\run.py" />
     <Compile Include="tieba\commands\__init__.py" />
@@ -37,21 +35,13 @@
     <Compile Include="tieba\__init__.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="config.json" />
-    <Content Include="emotion.json" />
-    <Content Include="README.md" />
     <Content Include="Readme.txt" />
-    <Content Include="README_en.md" />
-    <Content Include="scrapy.cfg" />
     <Content Include="tieba\.vs\slnx.sqlite" />
-    <Content Include="tieba\.vs\tieba\v15\.suo" />
     <Content Include="tieba\.vs\VSWorkspaceState.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="tieba\" />
     <Folder Include="tieba\.vs\" />
-    <Folder Include="tieba\.vs\tieba\" />
-    <Folder Include="tieba\.vs\tieba\v15\" />
     <Folder Include="tieba\commands\" />
     <Folder Include="tieba\spiders\" />
   </ItemGroup>

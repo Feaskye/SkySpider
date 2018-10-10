@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PyCrawler", "PyCrawler.pyproj", "{6666E4EB-BA41-4EE8-8E28-1D5C6F4E6F6A}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "PythonAppDemo", "..\PythonAppDemo\PythonAppDemo.pyproj", "{C8C8A482-6C62-4876-AE1D-8C99AFFF7F83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6666E4EB-BA41-4EE8-8E28-1D5C6F4E6F6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6666E4EB-BA41-4EE8-8E28-1D5C6F4E6F6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8C8A482-6C62-4876-AE1D-8C99AFFF7F83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8C8A482-6C62-4876-AE1D-8C99AFFF7F83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
